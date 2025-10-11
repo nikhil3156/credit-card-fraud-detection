@@ -6,6 +6,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import streamlit as st
 
+st.write("Current directory:", os.getcwd())
+st.write("Files in directory:", os.listdir())
+
 # --- Safe file path handling ---
 csv_path = os.path.join(BASE_DIR, "data", "creditcard_2023.csv")
 data = pd.read_csv(csv_path)
@@ -53,4 +56,5 @@ if submit:
             st.error("⚠️ Fraudulent transaction")
     except Exception as e:
         st.error("Invalid input. Please enter numeric values separated by commas.")
+
 
