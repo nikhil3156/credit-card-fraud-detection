@@ -10,7 +10,8 @@ st.write("Current directory:", os.getcwd())
 st.write("Files in directory:", os.listdir())
 
 # --- Safe file path handling ---
-data = pd.read_csv("https://raw.githubusercontent.com/nikhil3156/credit-card-fraud-detection/main/creditcard_2023.csv")
+url = "https://raw.githubusercontent.com/<nikhil3156>/<credit-card-fraud-detection>/main/creditcard_2023.csv"
+data = pd.read_csv(url)
 
 
 # Separate legitimate and fraudulent transactions
@@ -56,6 +57,7 @@ if submit:
             st.error("⚠️ Fraudulent transaction")
     except Exception as e:
         st.error("Invalid input. Please enter numeric values separated by commas.")
+
 
 
 
