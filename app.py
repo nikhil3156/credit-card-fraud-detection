@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -5,47 +6,53 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import streamlit as st
 
-# load data
-data = pd.read_csv('creditcard_2023.csv')
+# --- Safe file path handling ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(BASE_DIR, "creditcard_2023.csv")
 
-# separate legitimate and fraudulent transactions
+# Load data safely
+data = pd.read_csv(csv_path)
+
+# Separate legitimate and fraudulent transactions
 legit = data[data.Class == 0]
 fraud = data[data.Class == 1]
 
-# undersample legitimate transactions to balance the classes
+# Undersample legitimate transactions to balance the classes
 legit_sample = legit.sample(n=len(fraud), random_state=2)
 data = pd.concat([legit_sample, fraud], axis=0)
 
-# split data into training and testing sets
+# Split data into training and testing sets
 X = data.drop(columns="Class", axis=1)
 y = data["Class"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=2)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=2
+)
 
-# train logistic regression model
-model = LogisticRegression()
+# Train logistic regression model
+model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
 
-# evaluate model performance
+# Evaluate model performance
 train_acc = accuracy_score(model.predict(X_train), y_train)
 test_acc = accuracy_score(model.predict(X_test), y_test)
 
-# create Streamlit app
-st.title("Credit Card Fraud Detection Model")
-st.write("Enter the following features to check if the transaction is legitimate or fraudulent:")
+# Streamlit App
+st.title("💳 Credit Card Fraud Detection Model")
+st.write(f"**Training Accuracy:** {train_acc:.2f}")
+st.write(f"**Testing Accuracy:** {test_acc:.2f}")
+st.write("Enter the transaction features separated by commas:")
 
-# create input fields for user to enter feature values
-input_df = st.text_input('Input All features')
-input_df_lst = input_df.split(',')
-# create a button to submit input and get prediction
-submit = st.button("Submit")
+# Input for feature values
+input_df = st.text_input('Example: 0.1, -1.2, 2.3, ..., 0.05')
+submit = st.button("Predict")
 
 if submit:
-    # get input feature values
-    features = np.array(input_df_lst, dtype=np.float64)
-    # make prediction
-    prediction = model.predict(features.reshape(1,-1))
-    # display result
-    if prediction[0] == 0:
-        st.write("Legitimate transaction")
-    else:
-        st.write("Fraudulent transaction")
+    try:
+        features = np.array(input_df.split(','), dtype=np.float64)
+        prediction = model.predict(features.reshape(1, -1))
+        if prediction[0] == 0:
+            st.success("✅ Legitimate transaction")
+        else:
+            st.error("⚠️ Fraudulent transaction")
+    except Exception as e:
+        st.error("Invalid input. Please enter numeric values separated by commas.")
