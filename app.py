@@ -6,22 +6,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import streamlit as st
 
-# --- DEBUG INFO ---
-st.write("Current directory:", os.getcwd())
-st.write("Files in current directory:", os.listdir())
-
-# --- SAFE FILE PATH HANDLING ---
+# --- Safe file path handling ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# ✅ If your CSV is in the root folder:
 csv_path = os.path.join(BASE_DIR, "creditcard_2023.csv")
 
-# ✅ If your CSV is in a 'data' folder, use this instead:
-# csv_path = os.path.join(BASE_DIR, "data", "creditcard_2023.csv")
-
-st.write("Trying to load:", csv_path)
-
-# --- LOAD DATA ---
+# Load data safely
 data = pd.read_csv(csv_path)
 
 # Separate legitimate and fraudulent transactions
@@ -65,8 +54,9 @@ if submit:
             st.success("✅ Legitimate transaction")
         else:
             st.error("⚠️ Fraudulent transaction")
-    except Exception:
+    except Exception as e:
         st.error("Invalid input. Please enter numeric values separated by commas.")
+
 
 
 
