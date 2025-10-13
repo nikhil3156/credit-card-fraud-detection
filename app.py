@@ -9,9 +9,7 @@ import streamlit as st
 st.write("Current directory:", os.getcwd())
 st.write("Files in directory:", os.listdir())
 
-# --- Safe file path handling ---
-url = "https://raw.githubusercontent.com/<nikhil3156>/<credit-card-fraud-detection>/main/creditcard_2023.csv"
-data = pd.read_csv(url)
+data = pd.read_csv("creditcard_sample.csv")
 
 
 # Separate legitimate and fraudulent transactions
@@ -57,6 +55,7 @@ if submit:
             st.error("⚠️ Fraudulent transaction")
     except Exception as e:
         st.error("Invalid input. Please enter numeric values separated by commas.")
+
 
 
 
