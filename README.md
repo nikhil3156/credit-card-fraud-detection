@@ -1,59 +1,108 @@
-# credit-card-fraud-detection
-A machine learning model for detecting fraudulent credit card transactions using historical transaction data. The model uses classification algorithms to predict whether a transaction is legitimate or fraudulent, helping banks and businesses reduce financial losses.
-Dataset
+🔍 Project Overview
 
-Source: Kaggle Credit Card Fraud Detection Dataset
+This project detects financial fraud by combining:
 
-Description: The dataset contains anonymized credit card transactions, with features representing transaction details. The Class column is the target variable:
+1️⃣ Supervised Model (Optional)
 
-0 → Legitimate transaction
+A credit-card fraud model that gives a fraud probability.
 
-1 → Fraudulent transaction
+2️⃣ Unsupervised Model
 
-Key Features
+An IsolationForest anomaly detector that catches unusual transaction patterns.
 
-Data Preprocessing: Handling missing values, scaling features, encoding categorical variables if needed.
+Hybrid Score = (Supervised Score + Anomaly Score)
 
-Feature Engineering: Creating new meaningful features from existing data (optional).
+This final score tells how risky a transaction is.
 
-Model Training: Tested multiple classification algorithms like Logistic Regression, Random Forest, XGBoost, etc.
+You can upload your transaction file in the Streamlit App, and it shows:
 
-Evaluation Metrics: Accuracy, Precision, Recall, F1-score, ROC-AUC.
+Fraud / risk predictions
 
-Imbalanced Dataset Handling: Techniques like SMOTE or class weighting were used.
+High-risk flagged transactions
 
-Technologies Used
+Anomaly score
 
-Python, Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn
+Dashboard with visual charts
 
-Optional: XGBoost, LightGBM
+Downloadable results file
 
-How to Run
+🧠 Why This Project Is Useful
 
-Clone the repository:
+Banks and companies deal with millions of transactions.
+Most frauds do NOT look the same every time, so a hybrid approach works better.
 
-git clone <repo-link>
+This project helps:
 
+✔ Detect hidden fraud patterns
+✔ Highlight high-risk transactions
+✔ Visualize fraud trends
+✔ Create dashboards for business reporting
 
-Install dependencies:
+💡 Features
 
+Upload any transaction CSV
+
+Upload your own models (iso_model.pkl, credit_card_model.pkl)
+
+Automatic feature engineering
+
+Hybrid fraud scoring
+
+Interactive Streamlit UI
+
+Charts: score distribution, risk breakdown, anomalies
+
+Export results to CSV
+
+Ready for Power BI / Tableau dashboards
+
+🚀 How to Run the App
 pip install -r requirements.txt
+streamlit run app.py
+
+📁 Project Structure
+project/
+│── app.py                  → Streamlit dashboard
+│── models/
+│     ├── iso_model.pkl     → IsolationForest model
+│     ├── credit_model.pkl  → (optional)
+│── data/
+│     └── raw/              → Your raw transaction files
+│── outputs/
+│     └── hybrid_scores.csv → App-generated results
+│── assets/                 → Images
+│── README.md
+│── requirements.txt
+
+📦 Input Data Format
+
+Your CSV should have at least:
+
+amount
+
+step (time step or timestamp)
+
+oldbalanceOrg
+
+newbalanceOrig
+
+oldbalanceDest
+
+newbalanceDest
+
+isFraud (only if you want accuracy evaluation)
+
+The app can also work on unlabeled data.
+
+🧪 Model Saving Format (Important)
+
+Save your IsolationForest like this:
+
+joblib.dump({
+    "iso": iso,
+    "scaler": scaler,
+    "features": features
+}, "iso_model.pkl")
 
 
-Run the Jupyter Notebook or Python script:
-
-jupyter notebook credit_card_fraud.ipynb
-
-Results
-
-Model achieves X% accuracy and Y% recall for fraud detection (replace with your metrics).
-
-Confusion matrix and ROC curve included in the notebook.
-
-Future Improvements
-
-Test with deep learning models (e.g., neural networks).
-
-Incorporate real-time transaction data.
-
-Feature selection and hyperparameter tuning for better performance.
+This allows the Streamlit app to load it properly.
